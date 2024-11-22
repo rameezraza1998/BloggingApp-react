@@ -1,46 +1,46 @@
-import React, { useEffect } from "react";
-import { db } from "../config/firebase/configfirebase"; // Adjust this path to your Firebase configuration file
-import { addDoc, collection } from "firebase/firestore"; // Firestore imports
+import React, { useEffect, useState } from "react";
+import { auth } from "../config/firebase/configfirebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 function Greeting() {
+  const [username, setUsername] = useState("");
+
   const getGreeting = () => {
-    const currentHour = new Date().getHours(); // Get the current hour (0-23)
+    const currentHour = new Date().getHours();
     if (currentHour >= 5 && currentHour < 12) {
-      return "Good Morning!";
+      return "Good Morning ";
     } else if (currentHour >= 12 && currentHour < 18) {
-      return "Good Afternoon!";
+      return "Good Afternoon ";
     } else if (currentHour >= 18 && currentHour < 21) {
-      return "Good Evening!";
+      return "Good Evening ";
     } else {
-      return "Good Night!";
+      return "Good Night ";
     }
   };
-
 
   useEffect(() => {
-    
-  const saveGreetingToFirestore = async () => {
-    const greeting = getGreeting();
-    const currentTime = new Date().toLocaleTimeString();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in
+        setUsername(user.displayName || user.email || "Guest");
+        console.log("Mount");
+        
+      } else {
+        // No user is signed in
+        setUsername("Guest");
+        console.log("Unmount");
+      }
+    });
 
-    try {
-      const docRef = await addDoc(collection(db, "greetings"), {
-        greeting: greeting,
-        timestamp: currentTime,
-      });
-      console.log("Greeting saved with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding greeting: ", e);
-    }
-  };
-    saveGreetingToFirestore();
-  }, []); // Runs once when the component mounts
+    // Cleanup the listener when the component unmounts
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className="w-full bg-gradient-to-r from-gray-800 via-gray-900 to-black">
       <div className="flex items-center justify-center h-16 mx-auto px-4">
-        <h1 className="text-2xl font-bold text-primary">
-          {getGreeting()}
+        <h1 className="text-2xl font-bold text-white">
+          {getGreeting()}{username} !
         </h1>
       </div>
     </div>

@@ -31,7 +31,7 @@ function Login() {
         const uid = user.uid;
         console.log("Display Name:", user.displayName);
         console.log("Logged in", user);
-        navigate("/dashboard");
+        navigate("/dashboard" );
       })
       .catch((error) => {
         const errorMessage = error.message;
