@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Register from "./pages/Register.jsx";
 import Error from "./components/Error.jsx";
 import ProtectedRoutes from './components/ProtectedRoutes.jsx';
+import User from "./pages/User.jsx";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,11 @@ const router = createBrowserRouter([
       {
         path: "profile", // Profile page route
         element: <ProtectedRoutes component={<Profile />} />,
+      },
+      {
+        path: "User/:id",
+        element:<ProtectedRoutes component={<User />} /> 
+       
       },
       {
         path: "dashboard", // Dashboard page route

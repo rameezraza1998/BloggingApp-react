@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { auth } from "../config/firebase/configfirebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "../config/firebase/configfirebase"; // Ensure you're importing db from firebase config
+import { db,auth } from "../config/firebase/configfirebase"; 
 
 // Import the profile image
 import profileImage from "../assets/profile.png";
@@ -61,9 +60,9 @@ const Profile = () => {
 
         {/* Profile Info */}
         <div className="text-center mt-6 px-4">
-          <h1 className="text-4xl font-semibold text-white">{username}</h1>
-          <p className="text-lg text-white opacity-80">@{email}</p>
-          <p className="mt-4 text-lg text-white opacity-90">{bio}</p>
+          <h1 className="text-4xl font-semibold text-black">{username}</h1>
+          <p className="text-lg text-black opacity-80">{email}</p>
+          <p className="mt-4 text-lg text-black opacity-90">{bio}</p>
         </div>
 
         {/* Follow Button */}
@@ -78,23 +77,36 @@ const Profile = () => {
       <div className="border-t border-white opacity-50 my-8 w-full max-w-2xl"></div>
 
       {/* Blog Cards Section */}
+      {/* Blog Cards Section */}
       <div className="flex flex-col items-center justify-center py-8 w-full max-w-5xl">
         {data.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 w-full">
             {data.map((item) => (
               <div
                 key={item.docid}
-                className="card bg-gradient-to-br from-blue-100 to-indigo-200 rounded-xl shadow-lg hover:shadow-2xl transition-all"
+                className="card bg-gradient-to-br from-blue-100 to-indigo-200 rounded-xl shadow-lg hover:shadow-2xl transition-all w-full"
               >
                 <div className="card-body p-6">
-                  <h2 className="card-title text-2xl font-bold text-gray-800">{item.title}</h2>
-                  <p className="text-gray-700 mt-2">{item.text || "No description available."}</p>
+                  <h2 className="card-title text-2xl font-bold text-gray-800">
+                    {item.title}
+                  </h2>
+                  <p className="text-gray-700 mt-2">
+                    {item.text || "No description available."}
+                  </p>
+                  <p className="text-gray-700 mt-2">
+                    Posted at:{" "}
+                    {item.timeStamp
+                      ? new Date(item.timeStamp.seconds * 1000).toLocaleString()
+                      : "Date not available"}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <h1 className="text-center text-white text-3xl">No Blogs available...</h1>
+          <h1 className="text-center text-black text-3xl">
+            No Blogs available...
+          </h1>
         )}
       </div>
     </div>
